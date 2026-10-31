@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class ContactMessage extends Model
+{
+    /** Only these columns can be mass-assigned. */
+    protected $fillable = ['name', 'email', 'subject', 'message', 'ip_address', 'read_at'];
+
+    protected function casts(): array
+    {
+        return ['read_at' => 'datetime'];
+    }
+}

@@ -1,0 +1,191 @@
+@import 'tailwindcss';
+
+@source '../../storage/framework/views/*.php';
+@source '../js/**/*.vue';
+
+/*
+ * Theme tokens. Dark is the base; `html.light` (set by the theme toggle or the
+ * visitor's system preference) swaps the same tokens, so every utility
+ * (bg-ink-*, text-ivory, border-fg/10 …) follows the active theme automatically.
+ */
+@theme {
+    --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+
+    --color-ink-950: #07070a;
+    --color-ink-900: #0b0b10;
+    --color-ink-800: #111118;
+    --color-ink-700: #181821;
+    --color-ink-600: #22222e;
+    --color-ink-500: #2f2f3e;
+
+    --color-gold-200: #f1e2bd;
+    --color-gold-300: #e3c98a;
+    --color-gold-400: #d6b46f;
+    --color-gold-500: #c9a45c;
+    --color-gold-600: #a9843f;
+
+    --color-ivory: #f5efe3;
+    --color-mist: #9a9aab;
+
+    /* foreground used for hairlines and subtle fills: white on dark, ink on light */
+    --color-fg: #ffffff;
+
+    /* brand gradient + on-gold text never change with the theme */
+    --color-shine-hi: #f1e2bd;
+    --color-shine-a: #e3c98a;
+    --color-shine-mid: #d6b46f;
+    --color-shine-b: #c9a45c;
+    --color-shine-c: #a9843f;
+    --color-on-gold: #07070a;
+}
+
+:root {
+    color-scheme: dark;
+    --card-shadow: 0 1px 0 0 rgb(255 255 255 / 0.04) inset, 0 20px 40px -24px rgb(0 0 0 / 0.8);
+}
+
+:root.light {
+    color-scheme: light;
+    --color-ink-950: #f7f4ec;
+    --color-ink-900: #ffffff;
+    --color-ink-800: #fcfaf5;
+    --color-ink-700: #ffffff;
+    --color-ink-600: #ece6d6;
+    --color-ink-500: #d9d0ba;
+
+    --color-gold-200: #6b4f12;
+    --color-gold-300: #7a5a17;
+    --color-gold-400: #8a6619;
+    --color-gold-500: #9a7630;
+    --color-gold-600: #7d5f24;
+
+    --color-ivory: #1c1b24;
+    --color-mist: #66657a;
+    --color-fg: #1c1b24;
+
+    --card-shadow: 0 1px 2px rgb(60 45 10 / 0.06), 0 18px 36px -22px rgb(60 45 10 / 0.22);
+}
+
+/* status colours: lighter shades read on dark, deeper shades on light */
+:root.light .text-emerald-300 { color: #047857; }
+:root.light .text-amber-300 { color: #b45309; }
+:root.light .text-sky-300 { color: #0369a1; }
+:root.light .text-violet-300 { color: #6d28d9; }
+:root.light .text-rose-300, :root.light .text-rose-200 { color: #be123c; }
+:root.light .text-emerald-400 { color: #059669; }
+:root.light .text-rose-400 { color: #e11d48; }
+
+html {
+    background: var(--color-ink-950);
+    color: var(--color-ivory);
+}
+
+body {
+    font-family: var(--font-sans);
+    min-height: 100vh;
+    background:
+        radial-gradient(1200px 600px at 85% -10%, rgb(201 164 92 / 0.08), transparent 60%),
+        radial-gradient(900px 500px at -10% 110%, rgb(201 164 92 / 0.05), transparent 60%),
+        var(--color-ink-950);
+}
+
+::selection {
+    background: rgb(201 164 92 / 0.35);
+}
+
+@layer components {
+    .card {
+        @apply rounded-2xl border border-fg/[0.07] bg-gradient-to-b from-ink-700/80 to-ink-800/80 backdrop-blur;
+        box-shadow: var(--card-shadow);
+    }
+    .eyebrow {
+        @apply text-[11px] font-medium uppercase tracking-[0.22em] text-gold-500;
+    }
+    .display {
+        @apply font-display font-semibold tracking-tight text-ivory;
+    }
+    .input {
+        @apply w-full rounded-xl border border-fg/10 bg-ink-900/80 px-3.5 py-2.5 text-sm text-ivory placeholder:text-mist/60 outline-none transition focus:border-gold-500/70 focus:ring-4 focus:ring-gold-500/10;
+    }
+    .label {
+        @apply mb-1.5 block text-xs font-medium tracking-wide text-mist;
+    }
+    .btn-gold {
+        @apply btn bg-gradient-to-b from-shine-a to-shine-b text-on-gold shadow-[0_8px_24px_-8px_rgb(201_164_92/0.6)] hover:from-shine-hi hover:to-shine-mid;
+    }
+    .btn-ghost {
+        @apply btn border border-fg/10 bg-fg/[0.03] text-ivory hover:border-gold-500/40 hover:bg-fg/[0.06];
+    }
+    .btn-danger {
+        @apply btn border border-rose-500/30 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20;
+    }
+    .th {
+        @apply px-5 py-3 text-left text-[11px] font-medium uppercase tracking-[0.16em] text-mist;
+    }
+    .td {
+        @apply px-5 py-3.5 text-sm;
+    }
+}
+
+@utility btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+/* ---------- motion ---------- */
+@keyframes page-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes float-slow { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(24px, 18px, 0); } }
+@keyframes sheen { from { transform: translateX(-120%) skewX(-18deg); } to { transform: translateX(260%) skewX(-18deg); } }
+@keyframes pop-in { from { opacity: 0; transform: scale(0.97) translateY(6px); } to { opacity: 1; transform: none; } }
+
+.page-in { animation: page-in 0.38s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.reveal-in { animation: page-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.menu-in { animation: pop-in 0.18s ease-out both; }
+.orb { animation: float-slow 16s ease-in-out infinite; }
+
+/* scroll reveal (see the v-reveal directive); content stays visible if JS or motion is unavailable */
+.js-reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); transition-delay: var(--reveal-delay, 0ms); }
+.js-reveal.is-visible { opacity: 1; transform: none; }
+
+/* cards lift a little on hover; gold buttons get a light sweep */
+.lift { transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease; }
+.lift:hover { transform: translateY(-3px); }
+.btn-gold { position: relative; overflow: hidden; }
+.btn-gold::after { content: ''; position: absolute; inset: 0 auto 0 0; width: 40%; background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.45), transparent); transform: translateX(-120%) skewX(-18deg); pointer-events: none; }
+.btn-gold:hover:not(:disabled)::after { animation: sheen 0.8s ease; }
+.btn-gold:active:not(:disabled), .btn-ghost:active:not(:disabled) { transform: scale(0.98); }
+
+/* price tag: the number customers care about most */
+.price { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; color: var(--color-gold-300); font-variant-numeric: lining-nums tabular-nums; }
+
+@media (prefers-reduced-motion: reduce) {
+    .page-in, .reveal-in, .menu-in, .orb { animation: none; }
+    .js-reveal { opacity: 1; transform: none; transition: none; }
+    .lift:hover, .btn-gold:active, .btn-ghost:active { transform: none; }
+    .btn-gold:hover::after { animation: none; }
+    html { scroll-behavior: auto !important; }
+}
+
+html { scroll-behavior: smooth; }
+
+/* rendered page / policy content (markdown → HTML) */
+.prose-doc { color: var(--color-ivory); line-height: 1.75; font-size: 0.97rem; }
+.prose-doc h1, .prose-doc h2, .prose-doc h3 { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.01em; color: var(--color-ivory); }
+.prose-doc h1 { font-size: 2.4rem; margin: 0 0 1rem; }
+.prose-doc h2 { font-size: 1.8rem; margin: 2.4rem 0 0.7rem; padding-top: 0.4rem; }
+.prose-doc h3 { font-size: 1.3rem; margin: 1.6rem 0 0.5rem; }
+.prose-doc p { margin: 0.85rem 0; color: color-mix(in oklab, var(--color-ivory) 82%, transparent); }
+.prose-doc ul, .prose-doc ol { margin: 0.85rem 0; padding-left: 1.4rem; color: color-mix(in oklab, var(--color-ivory) 82%, transparent); }
+.prose-doc ul { list-style: disc; }
+.prose-doc ol { list-style: decimal; }
+.prose-doc li { margin: 0.35rem 0; }
+.prose-doc a { color: var(--color-gold-400); text-decoration: underline; text-underline-offset: 3px; }
+.prose-doc strong { color: var(--color-ivory); font-weight: 600; }
+.prose-doc hr { border: 0; border-top: 1px solid color-mix(in oklab, var(--color-fg) 12%, transparent); margin: 2rem 0; }
+.prose-doc blockquote { border-left: 3px solid var(--color-gold-500); padding: 0.1rem 1rem; color: var(--color-mist); margin: 1.2rem 0; }
+
+/* scrollbars */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-ink-500) transparent;
+}
